@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Currency Invoice Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 1. GİRİŞ VE KAYIT PANELİ -->
+  <div id="auth-container" class="container auth-box">
+    <h2>Fatura Yönetim Sistemi</h2>
+    <div class="tabs">
+      <button id="tab-login-btn" class="tab-btn active" onclick="switchTab('login')">Giriş Yap</button>
+      <button id="tab-register-btn" class="tab-btn" onclick="switchTab('register')">Kayıt Ol</button>
+    </div>
+
+    <!-- Giriş Formu -->
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <input type="email" id="login-email" placeholder="E-Posta Adresi" required>
+      <input type="password" id="login-password" placeholder="Şifre" required>
+      <button type="submit" class="btn primary">Giriş Yap</button>
+    </form>
+
+    <!-- Kayıt Formu -->
+    <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+      <input type="email" id="reg-email" placeholder="E-Posta Adresi" required>
+      <input type="password" id="reg-password" placeholder="Şifre" required>
+      <select id="reg-currency">
+        <option value="TRY">TRY - Türk Lirası</option>
+        <option value="USD">USD - Amerikan Doları</option>
+        <option value="EUR">EUR - Euro</option>
+      </select>
+      <button type="submit" class="btn primary">Kayıt Ol</button>
+    </form>
+    <p id="auth-error" class="error-text"></p>
+  </div>
+
+  <!-- 2. ANA DASHBOARD PANELİ -->
+  <div id="dashboard-container" class="container hidden">
+    <header class="navbar">
+      <h1>Invoice Dashboard</h1>
+      <div class="user-info">
+        <span id="user-email-display"></span>
+        <button onclick="handleLogout()" class="btn danger-sm">Çıkış Yap</button>
+      </div>
+    </header>
+
+    <!-- Finansal Özet Kartları -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <h3>Toplam Fatura</h3>
+        <p id="metric-count">0</p>
+      </div>
+      <div class="metric-card highlight">
+        <h3>Toplam Ciro (<span id="metric-currency">TRY</span>)</h3>
+        <p id="metric-revenue">0.00</p>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Sol Kolon: Formlar -->
+      <div class="forms-column">
+        
+        <!-- Müşteri Ekleme Formu -->
+        <div class="card-form">
+          <h3>Yeni Müşteri Ekle</h3>
+          <form onsubmit="handleCreateCustomer(event)">
+            <input type="text" id="cust-name" placeholder="Müşteri Adı / Unvan" required>
+            <input type="text" id="cust-tax" placeholder="Vergi No / TCKN">
+            <input type="email" id="cust-email" placeholder="E-Posta">
+            <button type="submit" class="btn secondary">Müşteri Kaydet</button>
+          </form>
+        </div>
+
+        <!-- Fatura Oluşturma Formu -->
+        <div class="card-form">
+          <h3>Yeni Fatura Oluştur</h3>
+          <form onsubmit="handleCreateInvoice(event)">
+            <input type="text" id="inv-title" placeholder="Fatura Başlığı / Hizmet" required>
+            <input type="number" step="0.01" id="inv-amount" placeholder="Tutar" required>
+            <select id="inv-currency" required>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="TRY">TRY</option>
+            </select>
+            <select id="inv-customer" required>
+              <option value="">Müşteri Seçin...</option>
+            </select>
+            <button type="submit" class="btn primary">Fatura Kes (Canlı Kur)</button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Sağ Kolon: Fatura Kartları -->
+      <div class="invoices-column">
+        <h3>Son Faturalar</h3>
+        <div id="invoices-grid" class="cards-grid">
+          <!-- Dinamik Fatura Kartları Buraya Gelecek -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
